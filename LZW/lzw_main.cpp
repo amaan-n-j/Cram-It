@@ -11,9 +11,9 @@ vector<int> encoder(string text){
 	string str;
 	unordered_map<string , int> dictionary;
 	for(int i = 0 ; i < dictSize; i++){
-		str += (char) i;
+		str +=  (char) i;
 		dictionary.insert({str,i});
-		str  = "";
+		str = "";
 	}
 
 	str = "";
@@ -33,11 +33,36 @@ vector<int> encoder(string text){
 	if(!str.empty()){
 			output.insert(output.end(),dictionary[str]);
 	}
+
 	return output;
 
 }
 
-
+string decoder(vector<int> output){
+	int dictSize = 256;
+	string str;
+	unordered_map<int, string > dictionary;
+	for(int i = 0 ; i < dictSize; i++){
+		str += (char) i;
+		dictionary.insert({i,str});
+		str  = "";
+	}
+	
+	str = "";
+	string characters ;
+      	characters += (char) output.at(0);
+	output.erase(output.begin());
+	string finalStr;
+	finalStr += characters;
+	
+	for(int code : output ){
+		string strValue = dictionary.count(code) ? dictionary[code] : characters + characters[0];
+		finalStr += strValue;
+		dictionary.insert({dictSize++,characters + strValue[0]});
+		characters = strValue;
+	}
+	return finalStr;	
+}
 
 int main(){
 	string str1 = "WYS*WYGWYS*WYSWYSG";
@@ -45,6 +70,9 @@ int main(){
 	for(int j : output){
 		cout << j <<'\n';
 	}
+	cout << "-----------------------------\n";
+        string decodedStr = decoder(output);
+	cout<< decodedStr << " --\t-- " << str1;       
 	return 0;
 }
 
